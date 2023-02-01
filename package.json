@@ -21,13 +21,17 @@
   },
   "homepage": "https://github.com/SadMap/NodeDiscordChatGPT#readme",
   "dependencies": {
-    "chatgpt": "^3.3.2",
+    "@keyv/sqlite": "^3.6.4",
+    "@waylaidwanderer/chatgpt-api": "^1.0.1",
+    "better-sqlite3": "^8.0.1",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "highlight.js": "^11.7.0",
     "http-parser-js": "^0.5.8",
     "markdown-it": "^13.0.1",
     "puppeteer-render-text": "^2.1.3",
+    "quick.db": "^9.0.8",
+    "random": "^4.1.0",
     "tempy": "^3.0.0"
   }
 }
