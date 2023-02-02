@@ -178,7 +178,7 @@ client.on("interactionCreate",async (interaction) => {
             interaction.reply("Zaten veritabanında yoksun!");
             return
         }
-        const data = db.get(interaction.user.id)
+        const data = await db.get(interaction.user.id)
         await db.set(interaction.user.id,{
             apikey:data.apikey,
             channelID:data.channelID,
