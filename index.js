@@ -65,8 +65,9 @@ client.on("messageCreate",async (message) => {
     let instance = apiInstances.get(message.author.id)
     if (!instance) {
         instance = new ChatGPTClient(data.apikey,{
-            promptPrefix:`Sen ChatGPT sin, openai tarafından eğitillmiş geniş bir dil modeli. Her yanıt için olabildiğince kısa yanıtlar ver (örneğin, ayrıntılı olma). Mümkün olduğu kadar kısa ve öz bir şekilde yanıtlaman çok önemli, bu nedenle lütfen bunu unutma. Bir liste oluşturuyorsan, çok fazla öğeye sahip olmasın. Öğe sayısını kısa tut.
-Şuanki tarih: ${currentDateString}\n\n`
+            promptPrefix:`Konuşarak yanıt ver
+Şuanki tarih: ${currentDateString}`,
+            userLabel:"Kullanıcı"
 },{
             store:new KeyvSqlite({
                 uri:`sqlite://databases/${message.author.id}.sqlite`
@@ -111,8 +112,9 @@ client.on("interactionCreate",async (interaction) => {
         })
         const apikey = interaction.options.getString("apikey",true)
         const instance = new ChatGPTClient(apikey,{
-            promptprefix:`Sen ChatGPT sin, openai tarafından eğitillmiş geniş bir dil modeli. Her yanıt için olabildiğince kısa yanıtlar ver (örneğin, ayrıntılı olma). Mümkün olduğu kadar kısa ve öz bir şekilde yanıtlaman çok önemli, bu nedenle lütfen bunu unutma. Bir liste oluşturuyorsan, çok fazla öğeye sahip olmasın. Öğe sayısını kısa tut.
-Şuanki tarih: ${currentDateString}\n\n`
+            promptPrefix:`Konuşarak yanıt ver
+Şuanki tarih: ${currentDateString}`,
+            userLabel:"Kullanıcı"
         },{
             store:new KeyvSqlite({
                 uri:`sqlite://databases/${interaction.user.id}.sqlite`
