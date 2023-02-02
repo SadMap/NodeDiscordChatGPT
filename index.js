@@ -36,6 +36,10 @@ client.on("ready",async () => {
         new discord.SlashCommandBuilder()
         .setName("create")
         .setDescription("chatgpt ile konuşmak için oda oluşturur")
+        .setDMPermission(false),
+        new discord.SlashCommandBuilder()
+        .setName("clear")
+        .setDescription("ChatGPT'nin hafızasını siler")
         .setDMPermission(false)
     ])
     console.log("Ready!")
@@ -57,7 +61,6 @@ client.on("messageCreate",async (message) => {
      */
     const data = await db.get(message.member.id)
     if (!data) return
-    console.log(data)
     if (data.channelID !== message.channelId) return;
     /**
      * @type {ChatGPTClient?}
@@ -79,7 +82,6 @@ client.on("messageCreate",async (message) => {
             conversationId:data.conversationId,
             parentMessageId:data.lastResponseID
         })
-        console.log(response)
         const chunks = chunkSubstr(response.response,2000)
         for (const chunk of chunks) {
             await message.reply({
@@ -105,15 +107,12 @@ client.on("interactionCreate",async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName == "apikey") {
        try {
-        const currentDate = new Date();
-        const currentDateString = currentDate.getFullYear()
         await interaction.deferReply({
             ephemeral:true
         })
         const apikey = interaction.options.getString("apikey",true)
         const instance = new ChatGPTClient(apikey,{
-            promptPrefix:`Konuşarak yanıt ver
-Şuanki tarih: ${currentDateString}`,
+            promptPrefix:`Konuşarak yanıt ver \n\n`,
             userLabel:"Kullanıcı"
         },{
             store:new KeyvSqlite({
@@ -121,7 +120,6 @@ client.on("interactionCreate",async (interaction) => {
             })
         })
         const response = await instance.sendMessage("bir serviste hesap başarıyla oluştururmuş gibi bir mesaj üretebilir misin")
-        console.log(response)
         await interaction.editReply({
             content:response.response,
             ephemeral:true
@@ -174,6 +172,20 @@ client.on("interactionCreate",async (interaction) => {
         })
         await thread.send(interaction.member.toString())
         interaction.reply(`[Seni Bekliyorum](${thread.url})`)
+    }
+    else if (interaction.commandName == "clear") {
+        if (!db.has(interaction.user.id)) {
+            interaction.reply("Zaten veritabanında yoksun!");
+            return
+        }
+        const data = db.get(interaction.user.id)
+        await db.set({
+            apikey:data.apikey,
+            channelID:data.channelID,
+            lastResponseID:null,
+            conversationId:null
+        })
+        interaction.reply("Veriler başarıyla sıfırlandı!")
     }
 })
 client.login(process.env.TOKEN)
