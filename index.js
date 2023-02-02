@@ -179,7 +179,7 @@ client.on("interactionCreate",async (interaction) => {
             return
         }
         const data = db.get(interaction.user.id)
-        await db.set({
+        await db.set(interaction.user.id,{
             apikey:data.apikey,
             channelID:data.channelID,
             lastResponseID:null,
